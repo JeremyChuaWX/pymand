@@ -102,7 +102,6 @@ class Commands:
         transactionId = (
             context["TRANSACTION_ID"] if transactionId is None else int(transactionId)
         )
-        print(transactionId)
         if transactionId < 0:
             print("no transaction to view")
             return
