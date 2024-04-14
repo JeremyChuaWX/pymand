@@ -5,8 +5,8 @@ import readline
 context = {
     "TRANSACTIONS_API_URL": "https://staging-transactions.symphonyda.io",
     "QUORUM_API_URL": "https://staging-quorum.symphonyda.io",
-    "ORGANISATION_ID": 0,
-    "APPROVER_ID": 0,
+    "ORGANISATION_ID": "eec140d9-27d5-47db-adf7-b72446f88be9",
+    "APPROVER_ID": "eec140d9-27d5-47db-adf7-b72446f88be9",
     "ASSET_ID": "ETH_TEST5",
     "EXTERNAL_WALLET_ADDRESS": "0x6BF801F0b62F9797e656519b6a3721618Be791a3",
     "VAULT_ACCOUNT_ID1": "11",
@@ -37,7 +37,7 @@ class Commands:
             },
         ).json()
         pprint(response)
-        context["TRANSACTION_ID"] = int(response["transaction"]["id"])
+        context["TRANSACTION_ID"] = int(response["data"]["transaction"]["id"])
         return
 
     @staticmethod
@@ -56,7 +56,7 @@ class Commands:
             },
         ).json()
         pprint(response)
-        context["TRANSACTION_ID"] = int(response["transaction"]["id"])
+        context["TRANSACTION_ID"] = int(response["data"]["transaction"]["id"])
         return
 
     @staticmethod
@@ -150,7 +150,3 @@ def main():
             command_function(*args)
         else:
             print("invalid command")
-
-
-if __name__ == "__main__":
-    main()
