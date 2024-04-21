@@ -11,10 +11,11 @@ class Pymand:
     def __init__(self, context: dict[str, str], *commands: Callable):
         self.context = context
 
-        for command in commands:
-            self.commands[command.__name__] = command
         self.commands["quit"] = self.stop
         self.commands["help"] = self.help
+
+        for command in commands:
+            self.commands[command.__name__] = command
 
         def format_command(name: str, command: Callable):
             args = command.__code__.co_varnames
