@@ -27,7 +27,7 @@ class Pymand:
             else:
                 return f"{name}{args}"
 
-        self.prompt = f"\n{[format_command(name, command) for name, command in self.commands.items()]}\n\nCommand> "
+        self.prompt = f"\n{[format_command(name, command) for name, command in self.commands.items()]}\nCommand> "
 
         return
 
