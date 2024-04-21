@@ -4,15 +4,25 @@ from typing import Callable
 
 
 class Pymand:
+    context: dict[str, str]
     commands: dict[str, Callable] = {}
     running: bool = True
 
-    def __init__(self, *commands: Callable):
+    def __init__(self, context: dict[str, str], *commands: Callable):
+        self.context = context
         for command in commands:
             self.commands[command.__name__] = command
         self.commands["quit"] = self.stop
         self.commands["help"] = self.help
         return
+
+    def run_command(self, command: Callable, args_dict: dict[str, str]):
+        args = command.__code__.co_varnames
+        args = args[1:] if len(args) > 0 and args[0] == "self" else args
+        final_args = {k: v for k, v in self.context if k in args}
+        for key, value in args_dict.items():
+            final_args[key] = value
+        return command(**final_args)
 
     def format_command(self, name: str):
         command = self.commands[name]
@@ -46,6 +56,7 @@ class Pymand:
                 [name, *args] = input_str.split(",")
                 command = self.commands[name]
                 args_dict = {k: v for k, v in map(lambda x: x.split("="), args)}
-                command(**args_dict)
+                res = self.run_command(command, args_dict)
+                pprint(res)
             except Exception as error:
                 pprint(error)
