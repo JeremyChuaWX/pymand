@@ -11,26 +11,38 @@ class Pymand:
         for command in commands:
             self.commands[command.__name__] = command
         self.commands["quit"] = self.stop
+        self.commands["help"] = self.help
         pass
-
-    def listCommands(self):
-        return [
-            f"{name}{command.__code__.co_varnames}"
-            for name, command in self.commands.items()
-        ]
 
     def stop(self):
         self.running = False
+        return
 
-    def prompt(self):
-        return f"\n{self.listCommands()}\n\nCommand> "
+    def help(self):
+        print("<command name>[,<argument name>=<argument value>,...]")
+
+    def format_command(self, name: str):
+        command = self.commands[name]
+        args = command.__code__.co_varnames
+        if len(args) > 0 and args[0] == "self":
+            args = args[1:]
+            # TODO: parent = ???
+            return f"self.{name}{args}"
+        else:
+            return f"{name}{args}"
+
+    def list_commands(self):
+        return [self.format_command(name) for name in self.commands.keys()]
+
+    def format_prompt(self):
+        return f"\n{self.list_commands()}\n\nCommand> "
 
     def run(self):
         while self.running:
+            input_str = input(self.format_prompt())
+            if not input_str:
+                continue
             try:
-                input_str = input(self.prompt())
-                if not input_str:
-                    continue
                 [name, *args] = input_str.split(",")
                 command = self.commands[name]
                 args_dict = {k: v for k, v in map(lambda x: x.split("="), args)}
