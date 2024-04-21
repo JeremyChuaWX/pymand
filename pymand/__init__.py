@@ -7,7 +7,7 @@ class Pymand:
     commands: dict[str, Callable] = {}
     running: bool = True
 
-    def __init__(self, commands: list[Callable]) -> None:
+    def __init__(self, *commands: Callable) -> None:
         for command in commands:
             self.commands[command.__name__] = command
         self.commands["quit"] = self.stop
