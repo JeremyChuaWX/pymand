@@ -18,6 +18,7 @@ class Pymand:
 
         def format_command(name: str, command: Callable):
             args = command.__code__.co_varnames
+            # remove `self` parameter
             if len(args) > 0 and args[0] == "self":
                 args = args[1:]
                 # TODO: parent = ???
@@ -31,6 +32,7 @@ class Pymand:
 
     def run_command(self, command: Callable, args_dict: dict[str, str]):
         args = command.__code__.co_varnames
+        # remove `self` parameter
         args = args[1:] if len(args) > 0 and args[0] == "self" else args
         final_args = {k: v for k, v in self.context.items() if k in args}
         for key, value in args_dict.items():
@@ -44,6 +46,7 @@ class Pymand:
     @staticmethod
     def help():
         print("<command name>[,<argument name>=<argument value>,...]")
+        return
 
     def run(self):
         while self.running:
