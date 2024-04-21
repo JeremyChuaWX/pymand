@@ -7,19 +7,12 @@ class Pymand:
     commands: dict[str, Callable] = {}
     running: bool = True
 
-    def __init__(self, *commands: Callable) -> None:
+    def __init__(self, *commands: Callable):
         for command in commands:
             self.commands[command.__name__] = command
         self.commands["quit"] = self.stop
         self.commands["help"] = self.help
-        pass
-
-    def stop(self):
-        self.running = False
         return
-
-    def help(self):
-        print("<command name>[,<argument name>=<argument value>,...]")
 
     def format_command(self, name: str):
         command = self.commands[name]
@@ -36,6 +29,13 @@ class Pymand:
 
     def format_prompt(self):
         return f"\n{self.list_commands()}\n\nCommand> "
+
+    def stop(self):
+        self.running = False
+        return
+
+    def help(self):
+        print("<command name>[,<argument name>=<argument value>,...]")
 
     def run(self):
         while self.running:
