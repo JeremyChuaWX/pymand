@@ -52,7 +52,8 @@ class Pymand:
                 command = self.commands[name]
                 args_dict = {k: v for k, v in map(lambda x: x.split("="), args)}
                 res = self.run_command(command, args_dict)
-                print(res)
+                if res is not None:
+                    print(res)
             except Exception as error:
                 print(error)
 
