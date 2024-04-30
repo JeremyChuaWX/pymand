@@ -18,27 +18,20 @@ class Pymand:
             self.commands[command.__name__] = command
 
         def format_command(name: str, command: Callable):
-            args = command.__code__.co_varnames
-            # remove `self` parameter
-            if len(args) > 0 and args[0] == "self":
-                args = args[1:]
-                # TODO: parent = ???
-                return f"parent.{name}{args}"
-            else:
-                return f"{name}{args}"
+            arg_list = get_command_arg_list(command)
+            return f"{name}{arg_list}"
 
         self.prompt = f"\n{[format_command(name, command) for name, command in self.commands.items()]}\nCommand> "
 
         return
 
     def run_command(self, command: Callable, args_dict: dict[str, str]):
-        args = command.__code__.co_varnames
-        # remove `self` parameter
-        args = args[1:] if len(args) > 0 and args[0] == "self" else args
-        final_args = {k: v for k, v in self.context.items() if k in args}
+        arg_list = get_command_arg_list(command)
+        # pick arg values from context
+        args = {k: v for k, v in self.context.items() if k in arg_list}
         for key, value in args_dict.items():
-            final_args[key] = value
-        return command(**final_args)
+            args[key] = value
+        return command(**args)
 
     def stop(self):
         self.running = False
@@ -62,3 +55,9 @@ class Pymand:
                 print(res)
             except Exception as error:
                 print(error)
+
+
+def get_command_arg_list(command: Callable):
+    args = command.__code__.co_varnames
+    # remove `self` parameter
+    return args[1:] if len(args) > 0 and args[0] == "self" else args
