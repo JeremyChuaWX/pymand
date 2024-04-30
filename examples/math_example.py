@@ -24,7 +24,7 @@ def is_prime(num: str) -> int:
 
 
 def main():
-    pymand = Pymand({}, fib)
+    pymand = Pymand({}, fib, is_prime)
     pymand.run()
 
 
